@@ -1,0 +1,6 @@
+# api/requirements.txt
+fastapi
+uvicorn[standard]
+python-dotenv
+requests 
+# Add other specific dependencies if needed by your helper scripts like get_weather
