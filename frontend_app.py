@@ -49,9 +49,9 @@ else:
             col1, col2 = st.columns([3, 1])
             with col1:
                 user_query = st.text_area("Your Question or Request:", height=100, 
-                                          placeholder="e.g., What are the risks of heavy rain in Mumbai?\nSafety procedures for earthquake?\nLatest on Cyclone Remal near Kolkata?")
+                                          placeholder="e.g., What are the risks of heavy rain in Chennai?\nSafety procedures for earthquake?\nLatest on Cyclone Remal near Kolkata?")
             with col2:
-                location_context = st.text_input("Location Context (Optional):", placeholder="e.g., Mumbai, Delhi")
+                location_context = st.text_input("Location Context (Optional):", placeholder="e.g., Chennai, Delhi")
                 # Conceptual: Allow user to provide an image URL for analysis
                 image_url_input = st.text_input("Satellite Image URL (Optional):", placeholder="Paste direct image URL")
 
@@ -112,7 +112,7 @@ else:
         st.subheader("🌦️ Weather Snapshot")
         col_w1, col_w2 = st.columns(2)
         with col_w1:
-            weather_city = st.text_input("Enter city for weather:", "Mumbai", key="dash_weather_city")
+            weather_city = st.text_input("Enter city for weather:", "Chennai", key="dash_weather_city")
         if weather_city:
             weather_endpoint = f"{BACKEND_API_URL}/context/weather"
             payload = {"city": weather_city}

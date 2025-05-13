@@ -118,7 +118,7 @@ class SMSAlertRequest(BaseModel):
 # --- Pydantic Models for Request/Response Validation ---
 # (Keep models from previous version: WeatherQuery, EarthquakeQuery, EventQuery, NewsQuery, ProcessQuery)
 class WeatherQuery(BaseModel):
-    city: str = Field(..., example="Mumbai")
+    city: str = Field(..., example="Chennai")
 
 class EarthquakeQuery(BaseModel):
     latitude: float = Field(default=DEFAULT_LAT, example=28.61)

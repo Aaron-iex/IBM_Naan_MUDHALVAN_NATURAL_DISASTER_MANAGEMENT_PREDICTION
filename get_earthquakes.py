@@ -64,7 +64,7 @@ def get_recent_earthquakes_near_location(lat, lon, radius_km=500, days=7, min_ma
 
 if __name__ == "__main__":
     # Example: Delhi coordinates approx 28.61 N, 77.23 E
-    delhi_lat, delhi_lon = 28.61, 77.23
+    delhi_lat, delhi_lon = 13.08, 780.27
     quakes = get_recent_earthquakes_near_location(delhi_lat, delhi_lon, radius_km=1000, days=30, min_magnitude=4.0)
     import json
     print(json.dumps(quakes, indent=2))
