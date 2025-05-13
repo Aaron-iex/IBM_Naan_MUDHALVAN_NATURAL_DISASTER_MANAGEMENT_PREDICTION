@@ -8,6 +8,8 @@ import json
 from datetime import datetime
 from dotenv import load_dotenv
 import logging # Added for better logging
+#from send_sms_twilio import send_disaster_alert_sms # If send_sms_twilio.py is in project root
+# Optional: Uncomment if you want to use image analysis
 
 # --- FastAPI Imports ---
 from fastapi import FastAPI, HTTPException, Security, Depends
@@ -30,6 +32,11 @@ if project_root not in sys.path:
     sys.path.append(project_root)
 
 # --- Import helper functions ---
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.append(project_root)
+    print(f"DEBUG: Added project root to sys.path: {project_root}") # For debugging
+
 try:
     # Assuming these helpers are synchronous for now
     from get_weather import get_city_weather
@@ -37,8 +44,12 @@ try:
     from get_events import get_natural_events
     from get_news import get_disaster_news
     from utils import get_coordinates # Geocoding function
+    from send_sms_twilio import send_disaster_alert_sms, twilio_client 
 except ImportError as e:
      print(f"FATAL ERROR: Could not import helper modules: {e}. Ensure they are in the Python path ({project_root}).")
+     sys.exit(1) 
+     print(f"FATAL ERROR during imports in main.py: {e}. Check file locations and sys.path.")
+    # ... (your existing error handling for missing modules) ...
      sys.exit(1) 
 
 # --- Load Environment Variables ---
@@ -100,6 +111,10 @@ app = FastAPI(
     dependencies=[Depends(get_api_key)] 
 )
 
+class SMSAlertRequest(BaseModel):
+    phone_number: str = Field(..., example="+916381198548")
+    alert_message: str = Field(..., example="Severe Cyclone Warning: Evacuate coastal areas immediately.")
+
 # --- Pydantic Models for Request/Response Validation ---
 # (Keep models from previous version: WeatherQuery, EarthquakeQuery, EventQuery, NewsQuery, ProcessQuery)
 class WeatherQuery(BaseModel):
@@ -122,8 +137,8 @@ class NewsQuery(BaseModel):
     page_size: int = Field(default=5, ge=1, le=20, example=5) # Limit page size
 
 class ProcessQuery(BaseModel):
-    text_input: str = Field(..., example="What are the risks from Cyclone Remal in Kolkata?")
-    location_context: str | None = Field(default=None, example="Kolkata") 
+    text_input: str = Field(..., example="What are the risks from Cyclone in Chennai?")
+    location_context: str | None = Field(default=None, example="Chennai, Tamil Nadu") 
     max_new_tokens: int = Field(default=300, ge=50, le=1024, example=300) # Reasonable token limits
 
 
@@ -136,6 +151,24 @@ async def read_root():
     return {"message": "Disaster Management Assistant API is running."}
 
 # --- Context Endpoints (Optional Direct Access) ---
+# In api/main.py
+
+class SMSAlertRequest(BaseModel):
+    phone_number: str = Field(..., example="+916381198548", pattern=r"^\+[1-9]\d{1,14}$") # Basic E.164 pattern
+    alert_message: str = Field(..., min_length=10, max_length=320, example="Critical Flood Warning: Evacuate low-lying areas near Yamuna river immediately.")
+
+@app.post("/alerts/send_sms", tags=["Alerts"], summary="Send an SMS Alert via Twilio")
+async def trigger_sms_alert(request_data: SMSAlertRequest): # DependsOn(get_api_key) is global
+    logger.info(f"Received request to send SMS to: {request_data.phone_number}")
+    # Add more validation/authorization here in a real app
+
+    success = send_disaster_alert_sms(request_data.phone_number, request_data.alert_message)
+    if success:
+        return {"status": "success", "message": f"SMS alert queued for sending to {request_data.phone_number}."}
+    else:
+        logger.error(f"SMS sending failed for {request_data.phone_number} via API endpoint.")
+        raise HTTPException(status_code=500, detail="Failed to send SMS alert. Check server logs and Twilio configuration.")
+
 # These remain synchronous as they call the synchronous helper functions directly
 
 @app.post("/context/weather", tags=["Context APIs"], summary="Get Current Weather")
@@ -155,6 +188,10 @@ async def fetch_weather_direct(query: WeatherQuery):
              raise HTTPException(status_code=400, detail=error_detail)
     logger.info(f"Successfully fetched weather for {query.city}")
     return weather_data
+
+@app.post("/alerts/send_sms", tags=["Alerts"], summary="Send an SMS Alert via Twilio")
+async def trigger_sms_alert(request_data: SMSAlertRequest):
+    logger.info(f"Received request to send SMS to: {request_data.phone_number}")
 
 @app.post("/context/earthquakes", tags=["Context APIs"], summary="Get Recent Earthquakes")
 async def fetch_earthquakes_direct(query: EarthquakeQuery):
@@ -212,6 +249,8 @@ async def process_with_llm_context(query: ProcessQuery):
     if not gemini_model: # Check if Gemini was configured successfully
         logger.error("LLM endpoint called but Gemini model is not configured.")
         raise HTTPException(status_code=503, detail="LLM Service (Gemini) is not configured or unavailable.")
+    
+
 
     # --- 1. Determine Location for Context ---
     context_data = {}
@@ -310,8 +349,7 @@ async def process_with_llm_context(query: ProcessQuery):
     context_string = "\n".join(context_lines)
     
     # Define the prompt structure clearly for the LLM
-    final_prompt = f"""Role: You are an AI assistant specialized in Indian disaster management and safety procedures.
-Current Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S IST')}
+    final_prompt = f"""Role: You are an AI assistant specialized in Indian disaster management and safety procedures.Current Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S IST')}
 Location Context: {context_data.get("location_info", "Default India context")}
 
 Relevant Real-time Information:

@@ -1,6 +1,32 @@
-# api/requirements.txt
+# requirements.txt for FastAPI Backend Deployment
+
 fastapi
 uvicorn[standard]
 python-dotenv
-requests 
-# Add other specific dependencies if needed by your helper scripts like get_weather
+google-generativeai
+httpx # For asynchronous HTTP requests
+geopy # For geocoding
+google-api-python-client # Includes uritemplate and other Google API essentials
+uritemplate
+click # Dependency for uvicorn
+
+# For SMS Alerts
+twilio
+
+# For basic image handling if you process image metadata or URLs
+Pillow
+
+# --- Optional: For CNN Image Analysis (TensorFlow/Keras) ---
+# Uncomment the line below if you build and integrate a TensorFlow/Keras CNN model
+# for image analysis directly within this backend.
+# This will significantly increase the size of your deployment.
+# tensorflow
+
+# Add beautifulsoup4 only if scrape_data.py is actively used by the backend
+# beautifulsoup4
+
+# Ensure all direct imports in your backend code are covered here.
+# Exclude: streamlit, pandas, openpyxl, jupyter, ipykernel,
+# Hugging Face training libraries unless your backend *directly* uses them for inference.
+# Exclude: PyTorch, TensorFlow unless your backend *directly* uses them for inference.
+# Exclude: any libraries not directly imported in your api/main.py or the get_*.py and utils.py helper scripts.
