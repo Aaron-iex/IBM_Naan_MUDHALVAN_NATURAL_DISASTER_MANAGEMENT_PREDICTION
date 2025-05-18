@@ -15,18 +15,18 @@ Project Structure
 The project is typically structured with a frontend (Streamlit) and a backend API (Flask or FastAPI) that interacts with an LLM and your data.
 
 your_project_folder/
-├── .gitignore          # Specifies intentionally untracked files that Git should ignore
-├── README.md           # This file
-├── requirements.txt    # Lists project dependencies
-├── frontend_app.py     # Streamlit code for the user interface
-├── backend_app.py      # Backend API code (using Flask or FastAPI)
-├── data/               # Directory for your JSONL context data files
-│   ├── your_context_data.jsonl
-│   └── flood_risk_india.jsonl
-├── models/             # Optional: Directory for local LLM files (if not using API)
-│   └── your_local_llm_files...
-├── .env                # (Optional) File for environment variables (e.g., API keys) - IGNORED by Git
-└── # Other utility files or notebooks (e.g., data_preparation.ipynb, utils.py)
+  ├── .gitignore          # Specifies intentionally untracked files that Git should ignore
+  ├── README.md           # This file
+  ├── requirements.txt    # Lists project dependencies
+  ├── frontend_app.py     # Streamlit code for the user interface
+  ├── backend_app.py      # Backend API code (using Flask or FastAPI)
+  ├── data/               # Directory for your JSONL context data files
+  │   ├── your_context_data.jsonl
+  │   └── flood_risk_india.jsonl
+  ├── models/             # Optional: Directory for local LLM files (if not using API)
+  │   └── your_local_llm_files...
+  ├── .env                # (Optional) File for environment variables (e.g., API keys) - IGNORED by Git
+  └── # Other utility files or notebooks (e.g., data_preparation.ipynb, utils.py)
 
 Setup and Installation
 Follow these steps to get the project running locally:
