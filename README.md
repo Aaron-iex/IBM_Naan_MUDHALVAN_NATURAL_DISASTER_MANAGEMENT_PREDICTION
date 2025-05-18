@@ -26,12 +26,18 @@ your_project_folder/
   
   ├── backend_app.py      # Backend API code (using Flask or FastAPI)
   
-  ├── data/               # Directory for your JSONL context data files
+  ├── data/ # Directory for your JSONL context data files
+  
   │   ├── your_context_data.jsonl
+  
   │   └── flood_risk_india.jsonl
-  ├── models/             # Optional: Directory for local LLM files (if not using API)
+  
+  ├── models/  # Optional: Directory for local LLM files (if not using API)
+  
   │   └── your_local_llm_files...
-  ├── .env                # (Optional) File for environment variables (e.g., API keys) - IGNORED by Git
+  
+  ├── .env             # (Optional) File for environment variables (e.g., API keys) - IGNORED by Git
+  
   └── # Other utility files or notebooks (e.g., data_preparation.ipynb, utils.py)
 
 Setup and Installation
