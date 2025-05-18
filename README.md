@@ -15,7 +15,9 @@ Project Structure
 The project is typically structured with a frontend (Streamlit) and a backend API (Flask or FastAPI) that interacts with an LLM and your data.
 
 your_project_folder/
+
   ├── .gitignore          # Specifies intentionally untracked files that Git should ignore
+  
   ├── README.md           # This file
   ├── requirements.txt    # Lists project dependencies
   ├── frontend_app.py     # Streamlit code for the user interface
