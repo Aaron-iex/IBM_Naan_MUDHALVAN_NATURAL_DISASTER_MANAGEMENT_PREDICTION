@@ -19,9 +19,13 @@ your_project_folder/
   ├── .gitignore          # Specifies intentionally untracked files that Git should ignore
   
   ├── README.md           # This file
+  
   ├── requirements.txt    # Lists project dependencies
+  
   ├── frontend_app.py     # Streamlit code for the user interface
+  
   ├── backend_app.py      # Backend API code (using Flask or FastAPI)
+  
   ├── data/               # Directory for your JSONL context data files
   │   ├── your_context_data.jsonl
   │   └── flood_risk_india.jsonl
