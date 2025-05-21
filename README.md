@@ -1,3 +1,5 @@
+IBM Naan Mudhalvan Natural Disaster Prediction and management 
+
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 # Adjust cuXXX for your CUDA version
 pip install transformers datasets accelerate peft bitsandbytes trl sentencepiece # Add others as needed
 pip install huggingface_hub # To interact with Hugging Face Hub
